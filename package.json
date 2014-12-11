@@ -4,7 +4,10 @@
   "description": "",
   "main": "server.js",
   "dependencies": {
-    "express": "^4.10.5"
+    "express": "^4.10.5",
+    "jade": "^1.8.1",
+    "jshint": "^2.5.10",
+    "path": "^0.4.9"
   },
   "devDependencies": {},
   "scripts": {
