@@ -5,6 +5,8 @@
   "main": "server.js",
   "dependencies": {
     "express": "^4.10.5",
+    "gulp": "^3.8.10",
+    "gulp-jshint": "^1.9.0",
     "jade": "^1.8.1",
     "jshint": "^2.5.10",
     "path": "^0.4.9"
