@@ -1,5 +1,5 @@
 var q = require('q')
-//var env = require()
+var env = require('./env')
 
 var connected = false
 
