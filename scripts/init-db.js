@@ -9,9 +9,6 @@ module.exports = function () {
 
   var models = require('../models')
 
-  //var userIds = {
-  //}
-
   var roles = {
     superAdmin: {_id: objectId(), name: 'super_admin'},
     admin: {_id: objectId(), name: 'admin'},
@@ -26,14 +23,26 @@ module.exports = function () {
     {_id: objectId(), email: 'test@test.com', password: md5('password')}
   ]
 
-  //return initCollection('Role', roles
-  //).then(function () {
-  //  return initCollection('User', superAdmins).then(function () {
-  //  superAdminRoles = superAdmins.map(function (superAdmin) {
-  //    return {_id: objectId(), user: superAdmin._id, role: roles.superAdmin._id}
-  //  })
-  //  return initCollection('UserHasRole', superAdminRoles).then(function () {
+  return initCollection('Role', [
+    roles.superAdmin, roles.admin
+  ]).then(function () {
+    return initCollection('User', superAdmins)
+  }).then(function () {
+    return initCollection('User', admins)
+  }).then(function () {
+    var superAdminRoles = _.each(superAdmins, function (super) {
+      return {user: super._id, role: roles.superAdmin}
+    })
+    return initCollection('UserHasRole', superAdminRoles)
+  }).then(function () {
+    var adminRoles = _.each(admins, function (admin) {
+      return {user: admin, role: roles.admin}
+    })
+    return initCollection('UserHasRole', adminRoles)
+  })
 
-  //  })
-  //}))
+
+  function initCollection (name, collection) {
+    //var promise = _.map()
+  }
 }
