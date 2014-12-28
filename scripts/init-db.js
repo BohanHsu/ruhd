@@ -23,26 +23,41 @@ module.exports = function () {
     {_id: objectId(), email: 'test@test.com', password: md5('password')}
   ]
 
+  var userHasRoles = _.map(superAdmins, function (user) {
+    return {user: user, role: roles.superAdmin}
+  }).concat(_.map(admins, function (user) {
+    return {user: user, role: roles.admin}
+  }))
+
   return initCollection('Role', [
     roles.superAdmin, roles.admin
   ]).then(function () {
-    return initCollection('User', superAdmins)
+    return initCollection('User', superAdmins.concat(admins))
   }).then(function () {
-    return initCollection('User', admins)
+    return initCollection('UserHasRole', userHasRoles)
   }).then(function () {
-    var superAdminRoles = _.each(superAdmins, function (super) {
-      return {user: super._id, role: roles.superAdmin}
-    })
-    return initCollection('UserHasRole', superAdminRoles)
-  }).then(function () {
-    var adminRoles = _.each(admins, function (admin) {
-      return {user: admin, role: roles.admin}
-    })
-    return initCollection('UserHasRole', adminRoles)
+    console.log('success')
+  }).fail(function (err) {
+    console.log('error' + err)
   })
 
-
   function initCollection (name, collection) {
-    //var promise = _.map()
+    var deferred = q.defer()
+    models[name].remove({}, function () {
+      var promises = _.map(collection, function (document) {
+        if (_.isFunction(document)) {
+          return document()
+        } else {
+          return models[name].create(document)
+        }
+      })
+
+      q.all(promises).then(function () {
+        deferred.resolve()
+      }, function (err) {
+        deferred.reject('Unable to init collection: ' + name + ', error:' + err.message)
+      })
+    })
+    return deferred.promise
   }
 }
