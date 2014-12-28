@@ -18,3 +18,18 @@ gulp.task('lint', function () {
     .pipe(jshint.reporter('default'))
     .pipe(jshint.reporter('fail'))
 })
+
+gulp.task('dropdb', function () {
+  var mongoose = require('mongoose')
+  require('./config/mongodb-connection')().then(function () {
+    mongoose.connection.db.dropDatabase()
+    mongoose.disconnect()
+    console.log('database droped')
+  })
+})
+
+gulp.task('initdb', function () {
+  require('./scripts/init-db')().then(function () {
+    require('mongoose').disconnect()
+  })
+})
