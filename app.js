@@ -14,5 +14,6 @@ app.use('/css', express.static(path.join(__dirname, '/public/css')))
 app.use('/img', express.static(path.join(__dirname, '/public/img')))
 
 app.use(require('./routes'))
+app.use(require('./controller'))
 
 module.exports = app
